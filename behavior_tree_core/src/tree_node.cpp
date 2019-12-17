@@ -21,6 +21,7 @@ BT::TreeNode::TreeNode(std::string name) : tick_engine(0)
     has_parent_ = false;
     is_state_updated_ = false;
     set_status(BT::IDLE);
+    set_reset_policy(BT::ON_SUCCESS_OR_FAILURE);
 }
 
 BT::TreeNode::~TreeNode() {}
@@ -47,6 +48,17 @@ BT::ReturnStatus BT::TreeNode::get_status()
     std::lock_guard<std::mutex> LockGuard(state_mutex_);
 
     return status_;
+}
+
+void BT::TreeNode::set_reset_policy(ResetPolicy new_policy)
+{
+    // state_ update
+    reset_policy_ = new_policy;
+}
+
+BT::ResetPolicy BT::TreeNode::get_reset_policy()
+{
+    return reset_policy_;
 }
 
 BT::ReturnStatus BT::TreeNode::get_color_status()

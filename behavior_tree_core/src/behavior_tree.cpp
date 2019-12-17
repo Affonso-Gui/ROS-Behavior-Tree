@@ -15,7 +15,29 @@
 #include <dot_bt.h>
 #include <ros/ros.h>
 
+bool willRetry(BT::ControlNode* node) {
+  BT::ReturnStatus status = node->get_status();
+  BT::ResetPolicy policy;
 
+  switch(status) {
+  case BT::SUCCESS:
+    policy = node->get_reset_policy();
+    if(policy == BT::ON_SUCCESS_OR_FAILURE ||
+       policy == BT::ON_SUCCESS)
+      return true;
+    return false;
+    break;
+  case BT::FAILURE:
+    policy = node->get_reset_policy();
+    if(policy == BT::ON_SUCCESS_OR_FAILURE ||
+       policy == BT::ON_FAILURE)
+      return true;
+    return false;
+    break;
+  default:
+    return true;
+  }
+}
 
 void Execute(BT::ControlNode* root, int TickPeriod_milliseconds)
 {
@@ -39,9 +61,11 @@ void Execute(BT::ControlNode* root, int TickPeriod_milliseconds)
 
         if (root->get_status() != BT::RUNNING)
         {
+            if(!willRetry(root)) break;
             // when the root returns a status it resets the colors of the tree
             root->ResetColorState();
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(TickPeriod_milliseconds));
     }
+    root->set_status(BT::EXIT);
 }

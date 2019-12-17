@@ -90,7 +90,7 @@ enum ReturnStatus {RUNNING, SUCCESS, FAILURE, IDLE, HALTED, EXIT};
 // - "FAIL_ON_ALL" indicates that all of the node's children must fail before it
 //   returns failure.
 enum FailurePolicy {FAIL_ON_ONE, FAIL_ON_ALL};
-enum ResetPolity   {ON_SUCCESS_OR_FAILURE, ON_SUCCESS, ON_FAILURE};
+enum ResetPolicy   {ON_SUCCESS_OR_FAILURE, ON_SUCCESS, ON_FAILURE, NEVER};
 
 // Enumerates the options for when a parallel node is considered to have succeeded:
 // - "SUCCEED_ON_ONE" indicates that the node will return success as soon as one
@@ -115,6 +115,7 @@ protected:
     bool is_state_updated_;
     ReturnStatus status_;
     ReturnStatus color_status_;
+    ResetPolicy reset_policy_;
 
 
     std::mutex state_mutex_;
@@ -136,7 +137,7 @@ public:
 
 
 
-    // The constructor and the distructor
+    // The constructor and the destructor
     explicit TreeNode(std::string name);
     ~TreeNode();
 
@@ -172,6 +173,9 @@ public:
 
     ReturnStatus get_status();
     void set_status(ReturnStatus new_status);
+
+    ResetPolicy get_reset_policy();
+    void set_reset_policy(ResetPolicy new_policy);
 
 
     std::string get_name();
