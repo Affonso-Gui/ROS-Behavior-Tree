@@ -118,6 +118,12 @@ target_link_libraries(gtest_ros
   ${PROJECT_NAME}
   ${GTEST_LIBRARIES})
 
+add_executable(petbottle_demo src/petbottle_demo/petbottle_demo.cpp)
+target_link_libraries(petbottle_demo
+  ${catkin_LIBRARIES}
+  ${PROJECT_NAME}
+  ${GTEST_LIBRARIES})
+
 
 #add_executable(ros_test src/ros_test.cpp ${BTSrcLibrary} ${BTHeadLibrary})
 #target_link_libraries(ros_test ${catkin_LIBRARIES} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
