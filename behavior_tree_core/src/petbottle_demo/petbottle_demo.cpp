@@ -22,11 +22,11 @@ int main(int argc, char **argv)
 
         BT::SequenceNode* sequence_root = new BT::SequenceNode("seq_root");
         BT::SequenceNode* sequence_pick = new BT::SequenceNode("seq_pick");
-        BT::FallbackNode* fallback_pick = new BT::FallbackNode("fall_pick");
+        BT::FallbackNode* fallback_grasp = new BT::FallbackNode("fall_grasp");
         BT::FallbackNode* fallback_search = new BT::FallbackNode("fall_search");
 
         sequence_root->AddChild(fallback_search);
-        sequence_root->AddChild(fallback_pick);
+        sequence_root->AddChild(fallback_grasp);
         sequence_root->AddChild(finish_action);
 
         fallback_search->AddChild(finishing_cond);
@@ -34,8 +34,8 @@ int main(int argc, char **argv)
           decorator_lost->AddChild(lost_cond);
         fallback_search->AddChild(search_action);
 
-        fallback_pick->AddChild(grasped_cond);
-        fallback_pick->AddChild(sequence_pick);
+        fallback_grasp->AddChild(grasped_cond);
+        fallback_grasp->AddChild(sequence_pick);
           sequence_pick->AddChild(decorator_moved);
             decorator_moved->AddChild(moved_cond);
           sequence_pick->AddChild(pick_action);
