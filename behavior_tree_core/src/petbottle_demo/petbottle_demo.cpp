@@ -13,11 +13,13 @@ int main(int argc, char **argv)
         BT::ROSAction* finish_action = new BT::ROSAction("finish");
 
         BT::ROSCondition* found_cond = new BT::ROSCondition("found");
+        BT::ROSCondition* check_grasp_cond = new BT::ROSCondition("check_grasp");
         BT::ROSCondition* grasped_cond = new BT::ROSCondition("grasped");
         BT::ROSCondition* moved_cond = new BT::ROSCondition("moved");
 
         BT::NegationNode* decorator_moved = new BT::NegationNode("decorator2");
 
+        BT::SequenceNode* sequence_grasped = new BT::SequenceNode("seq_grasped");
         BT::SequenceNode* sequence_finish = new BT::SequenceNode("seq_finish");
         BT::SequenceNode* sequence_pick = new BT::SequenceNode("seq_pick");
         BT::SequenceNode* sequence_pick_moved = new BT::SequenceNode("seq_pick_moved");
@@ -28,8 +30,11 @@ int main(int argc, char **argv)
         sequence_finish->AddChild(fallback_grasped);
         sequence_finish->AddChild(finish_action);
 
-        fallback_grasped->AddChild(grasped_cond);
+        fallback_grasped->AddChild(sequence_grasped);
         fallback_grasped->AddChild(sequence_pick);
+
+        sequence_grasped->AddChild(check_grasp_cond);
+        sequence_grasped->AddChild(grasped_cond);
 
         sequence_pick->AddChild(fallback_found);
         sequence_pick->AddChild(sequence_pick_moved);
